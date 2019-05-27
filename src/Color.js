@@ -3,11 +3,11 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-27 18:08:46
+ * @LastEditTime: 2019-05-27 22:44:51
  * @Description: Color 类
  */
 
-const { testColor, removeSpace, joinSpace, hex2hsv, rgb2hsv, hsl2hsv, hsv2hex, hsv2rgb, hsv2hsl } = require('./utils')
+const { testColor, removeSpace, joinSpace } = require('./utils')
 
 class Color {
   constructor(color) {
@@ -17,31 +17,39 @@ class Color {
     this.initColor = color
     this.initType = type
 
-    this._hue = 0
-    this._saturation = 100
-    this._value = 100
-    this._trans = 1
+    this._r = 255
+    this._g = 255
+    this._b = 255
+    this._a = 100
 
     this.init()
   }
 
+  hex2rgb() {}
+
+  hsl2rgb() {}
+
+  rgb2rgb() {}
+
+  rgb2hex() {}
+
+  rgb2hsl() {}
+
   init() {
     switch (this.initType) {
       case 'hex':
-        
+        this.hex2rgb()
         break
       case 'rgb':
-        
+        this.rgb2rgb()
         break
       case 'hsl':
-        
+        this.hsl2rgb()
         break
     }
   }
 
-  getColor(tyoe = 'hex') {
-    return joinSpace(this.initColor)
-  }
+  getColor() {}
 }
 
 module.exports = Color
