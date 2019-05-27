@@ -25,13 +25,11 @@ function activate(context) {
     // 获取有效的 Ranges，该数组中的为用户选中并且通过了色值 reg 的过滤的 ranges
     const validRanges = preRanges.filter(range => testColor.some(regObj => regObj.reg.test(document.getText(range))))
 
-    const Colors = validRanges.map(range => new Color(document.getText(range)))
-
-    console.log(Colors)
+    const currRanges = validRanges.map(range => new Color(document.getText(range)))
 
     activeTextEditor.edit(editBuilder => {
-      validRanges.forEach(range => {
-        editBuilder.replace(range, 'success')
+      validRanges.forEach((range, index) => {
+        editBuilder.replace(range, currRanges[index].getColor())
       })
     })
 

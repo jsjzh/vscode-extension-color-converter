@@ -3,7 +3,7 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-27 17:34:35
+ * @LastEditTime: 2019-05-27 18:01:09
  * @Description: Color 类
  */
 
@@ -13,6 +13,7 @@ class Color {
   constructor(color) {
     color = removeSpace(color)
     const { type } = testColor.find(regObj => regObj.reg.test(color)) || {}
+
     this.initColor = color
     this.initType = type
 
@@ -27,10 +28,11 @@ class Color {
   init() {}
 
   transColor(tyoe = 'hex') {
-    return this.color
+    return this.initColor
   }
+
   getColor(tyoe = 'hex') {
-    return joinSpace(this.transColor(tyoe))
+    return 'success'
   }
 }
 

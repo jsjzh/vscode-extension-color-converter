@@ -1,3 +1,5 @@
+// .eslintrc.json
+
 {
 	"env": {
 		"browser": false,
@@ -20,4 +22,20 @@
 		"constructor-super": "warn",
 		"valid-typeof": "warn"
 	}
+}
+
+// jsconfig.json
+
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es6",
+		"checkJs": false,  /* Typecheck .js files. */
+		"lib": [
+			"es6"
+		]
+	},
+	"exclude": [
+		"node_modules"
+	]
 }
