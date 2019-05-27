@@ -3,7 +3,7 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-27 18:01:09
+ * @LastEditTime: 2019-05-27 18:08:46
  * @Description: Color 类
  */
 
@@ -25,14 +25,22 @@ class Color {
     this.init()
   }
 
-  init() {}
-
-  transColor(tyoe = 'hex') {
-    return this.initColor
+  init() {
+    switch (this.initType) {
+      case 'hex':
+        
+        break
+      case 'rgb':
+        
+        break
+      case 'hsl':
+        
+        break
+    }
   }
 
   getColor(tyoe = 'hex') {
-    return 'success'
+    return joinSpace(this.initColor)
   }
 }
 

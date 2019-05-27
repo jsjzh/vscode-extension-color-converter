@@ -3,7 +3,7 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-27 17:38:01
+ * @LastEditTime: 2019-05-27 18:06:31
  * @Description: 工具函数集
  */
 
@@ -24,7 +24,7 @@ const rgbReg = /^(rgb|rgba){1}\([\d,.]+\)$/
  */
 const hslReg = /^(hsl|hsla){1}\([\d,%.]+\)$/
 
-const testColor = [{ type: 'Hex', reg: HexReg }, { type: 'rgb', reg: rgbReg }, { type: 'hsl', reg: hslReg }]
+const testColor = [{ type: 'hex', reg: HexReg }, { type: 'rgb', reg: rgbReg }, { type: 'hsl', reg: hslReg }]
 
 /**
  * 去除字符串中的空格
