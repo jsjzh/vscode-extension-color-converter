@@ -1,47 +1,48 @@
 const vscode = require('vscode')
 const { Range, Position } = vscode
+
+const Color = require('./Color')
 const { testColor } = require('./utils')
 
 /**
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-  console.log('Congratulations, your extension "color-converter" is now active!')
-  let disposable = vscode.commands.registerCommand('extension.helloWorld', function() {
+  console.log('color converter is activate~')
+  function colorConverter() {
     debugger
     const { activeTextEditor } = vscode.window
-    const {
-      selections,
-      document: { getText }
-    } = activeTextEditor
-    // 获取有效的 selections 片段
-    const validSelections = selections.filter(selection => !selection.isEmpty && selection.isSingleLine)
-    // 根据 selections 片段去获取 Ranges，用于 activeTextEditor.document.getText 去获取真实的选择的文本
-    // 但是，这个还不是最终需要的文本
-    const validRanges = validSelections
-      .map(selection => [
-        new Position(selection._start._line, selection._start._character),
-        new Position(selection._end._line, selection._end._character)
-      ])
-      .map(validPositions => new Range(validPositions[0], validPositions[1]))
-      .filter(range => testColor.some(regObj => regObj.reg.test(getText(range))))
+    const { selections, document } = activeTextEditor
+    // selections，去除空的以及非单行的 selections
+    const preSelections = selections.filter(selection => !selection.isEmpty && selection.isSingleLine)
+    // positions
+    const prePositions = preSelections.map(selection => [
+      new Position(selection._start._line, selection._start._character),
+      new Position(selection._end._line, selection._end._character)
+    ])
+    // Ranges
+    const preRanges = prePositions.map(validPositions => new Range(validPositions[0], validPositions[1]))
+    // 获取有效的 Ranges，该数组中的为用户选中并且通过了色值 reg 的过滤的 ranges
+    const validRanges = preRanges.filter(range => testColor.some(regObj => regObj.reg.test(document.getText(range))))
 
-    console.log(validRanges)
+    const Colors = validRanges.map(range => new Color(document.getText(range)))
 
-    // activeTextEditor.edit(editBuilder => {
-    //   selections.forEach(selection => {
-    //     editBuilder.replace(selection, 'success')
-    //   })
-    // })
-    vscode.window.showInformationMessage('Hello World!')
-  })
+    console.log(Colors)
 
-  context.subscriptions.push(disposable)
+    activeTextEditor.edit(editBuilder => {
+      validRanges.forEach(range => {
+        editBuilder.replace(range, 'success')
+      })
+    })
+
+    vscode.window.showInformationMessage('color converter say hello~')
+  }
+
+  context.subscriptions.push(vscode.commands.registerCommand('extension.cc', colorConverter))
 }
-exports.activate = activate
 
 function deactivate() {
-  console.log('Congratulations, your extension "color-converter" is now deactivate!')
+  console.log('color converter is deactivate~')
 }
 
 module.exports = {

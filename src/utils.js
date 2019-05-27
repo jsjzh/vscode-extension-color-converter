@@ -3,7 +3,7 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-27 16:04:56
+ * @LastEditTime: 2019-05-27 17:38:01
  * @Description: 工具函数集
  */
 
@@ -39,11 +39,29 @@ function removeSpace(str) {
  * @param {String} str
  */
 function joinSpace(str) {
-  return str.split(',') / join(', ')
+  return str.split(',').join(', ')
 }
+
+function hex2hsv() {}
+
+function rgb2hsv() {}
+
+function hsl2hsv() {}
+
+function hsv2hex() {}
+
+function hsv2rgb() {}
+
+function hsv2hsl() {}
 
 module.exports = {
   testColor,
   removeSpace,
-  joinSpace
+  joinSpace,
+  hex2hsv,
+  rgb2hsv,
+  hsl2hsv,
+  hsv2hex,
+  hsv2rgb,
+  hsv2hsl
 }

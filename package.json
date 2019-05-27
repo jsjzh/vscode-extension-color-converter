@@ -10,21 +10,21 @@
     "Formatters"
   ],
   "activationEvents": [
-    "onCommand:extension.helloWorld"
+    "onCommand:extension.cc"
   ],
   "main": "./src/index.js",
   "contributes": {
     "commands": [
       {
-        "command": "extension.helloWorld",
-        "title": "Hello World"
+        "command": "extension.cc",
+        "title": "cc"
       }
     ],
     "keybindings": [
       {
-        "command": "extension.helloWorld",
-        "key": "ctrl+f10",
-        "mac": "cmd+f10",
+        "command": "extension.cc",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
         "when": "editorTextFocus"
       }
     ]
