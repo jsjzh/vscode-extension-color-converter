@@ -3,9 +3,11 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-27 22:44:51
+ * @LastEditTime: 2019-05-27 22:49:07
  * @Description: Color 类
  */
+
+// ['hex','rgb','hsl']
 
 const { testColor, removeSpace, joinSpace } = require('./utils')
 
@@ -49,7 +51,19 @@ class Color {
     }
   }
 
-  getColor() {}
+  getColor() {
+    switch (this.initType) {
+      case 'hex':
+        this.hex2rgb()
+        break
+      case 'rgb':
+        this.rgb2hsl()
+        break
+      case 'hsl':
+        this.hsl2rgb().rgb2hex()
+        break
+    }
+  }
 }
 
 module.exports = Color
