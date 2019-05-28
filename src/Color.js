@@ -3,7 +3,7 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-28 10:44:19
+ * @LastEditTime: 2019-05-28 13:55:43
  * @Description: Color 类
  * hex -> rgb -> hsl -> hex
  */
@@ -33,7 +33,6 @@ class Color {
     this._g = g
     this._b = b
     this._a = a
-    return +a === 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${a})`
   }
 
   rgb2rgb() {
@@ -46,7 +45,9 @@ class Color {
 
   hsl2rgb() {
     const [h, s, l, a = 1] = transBracketColor(this.initColor)
-    const [r, g, b] = hsl2Rgb(h, s, l)
+    let _s = s.slice(0, -1)
+    let _l = l.slice(0, -1)
+    const [r, g, b] = hsl2Rgb(h, _s, _l)
     this._r = r
     this._g = g
     this._b = b

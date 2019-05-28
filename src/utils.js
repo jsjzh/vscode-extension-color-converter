@@ -3,7 +3,7 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-28 11:39:05
+ * @LastEditTime: 2019-05-28 14:35:50
  * @Description: 工具函数集
  */
 
@@ -72,17 +72,18 @@ function hsl2Rgb(h, s, l) {
   s = bound01(s, 100)
   l = bound01(l, 100)
 
-  function hue2rgb(p, q, t) {
-    if (t < 0) t += 1
-    if (t > 1) t -= 1
-    if (t < 1 / 6) return p + (q - p) * 6 * t
-    if (t < 1 / 2) return q
-    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
-    return p
-  }
+  if (s == 0) {
+    r = g = b = l // achromatic
+  } else {
+    function hue2rgb(p, q, t) {
+      if (t < 0) t += 1
+      if (t > 1) t -= 1
+      if (t < 1 / 6) return p + (q - p) * 6 * t
+      if (t < 1 / 2) return q
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
+      return p
+    }
 
-  if (s === 0) r = g = b = l
-  else {
     let q = l < 0.5 ? l * (1 + s) : l + s - l * s
     let p = 2 * l - q
     r = hue2rgb(p, q, h + 1 / 3)
@@ -90,7 +91,7 @@ function hsl2Rgb(h, s, l) {
     b = hue2rgb(p, q, h - 1 / 3)
   }
 
-  return [r * 255, g * 255, b * 255]
+  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)]
 }
 
 function isOnePointZero(n) {
@@ -128,7 +129,7 @@ function rgb2hsl(r, g, b) {
     h /= 6
   }
 
-  return [h * 360, s * 100 + '%', l * 100 + '%']
+  return [Math.round(h * 360), Math.round(s * 100) + '%', Math.round(l * 100) + '%']
 }
 
 function pad2(c) {
@@ -136,17 +137,12 @@ function pad2(c) {
 }
 
 function rgb2hex(r, g, b, a) {
-  let hex = [pad2(Math.round(r).toString(16)), pad2(Math.round(g).toString(16)), pad2(Math.round(b).toString(16))]
-
-  // Return a 3 character hex if possible
-  if (
-    a &&
-    hex[0].charAt(0) == hex[0].charAt(1) &&
-    hex[1].charAt(0) == hex[1].charAt(1) &&
-    hex[2].charAt(0) == hex[2].charAt(1)
-  ) {
-    return '#' + hex[0].charAt(0) + hex[1].charAt(0) + hex[2].charAt(0)
-  }
+  let hex = [
+    pad2(Math.round(r).toString(16)),
+    pad2(Math.round(g).toString(16)),
+    pad2(Math.round(b).toString(16)),
+    pad2(convertDecimalToHex(a))
+  ]
 
   return '#' + hex.join('')
 }
@@ -173,6 +169,10 @@ function bound01(n, max) {
 
   // Convert into [0, 1] range if it isn't already
   return (n % max) / parseFloat(max)
+}
+
+function convertDecimalToHex(d) {
+  return Math.round(parseFloat(d) * 255).toString(16)
 }
 
 function convertHexToDecimal(h) {
