@@ -3,12 +3,25 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-28 13:55:43
+ * @LastEditTime: 2019-05-28 17:10:07
  * @Description: Color 类
  * hex -> rgb -> hsl -> hex
  */
 
-const { testColor, removeSpace, transHexColor, transBracketColor, hsl2Rgb, rgb2hsl, rgb2hex } = require('./utils')
+const {
+  testColor,
+  removeSpace,
+  transHexColor,
+  transBracketColor,
+  hex2rgb,
+  rgb2rgb,
+  hsl2rgb,
+  rgb2hex,
+  rgb2hsl
+} = require('./utils')
+
+const color2rgb = { hex2rgb, rgb2rgb, hsl2rgb }
+const rgb2color = { rgb2hex, rgb2rgb, rgb2hsl }
 
 class Color {
   constructor(color) {
@@ -19,80 +32,52 @@ class Color {
     this.initColor = color
     this.initType = type
 
-    this._r = 0
-    this._g = 0
-    this._b = 0
+    this._r = 255
+    this._g = 255
+    this._b = 255
     this._a = 1
+    this.invalid = true
 
-    this.init()
-  }
-
-  hex2rgb() {
-    const [r, g, b, a = 1] = transHexColor(this.initColor)
-    this._r = r
-    this._g = g
-    this._b = b
-    this._a = a
-  }
-
-  rgb2rgb() {
-    const [r, g, b, a = 1] = transBracketColor(this.initColor)
-    this._r = r
-    this._g = g
-    this._b = b
-    this._a = a
-  }
-
-  hsl2rgb() {
-    const [h, s, l, a = 1] = transBracketColor(this.initColor)
-    let _s = s.slice(0, -1)
-    let _l = l.slice(0, -1)
-    const [r, g, b] = hsl2Rgb(h, _s, _l)
-    this._r = r
-    this._g = g
-    this._b = b
-    this._a = a
-  }
-
-  rgb2hsl() {
-    const { _r: r, _g: g, _b: b, _a: a } = this
-    const [h, s, l] = rgb2hsl(r, g, b)
-    return +a === 1 ? `hsl(${h}, ${s}, ${l})` : `hsla(${h}, ${s}, ${l}, ${a})`
-  }
-
-  rgb2hex() {
-    const { _r: r, _g: g, _b: b, _a: a } = this
-    return rgb2hex(r, g, b, a)
+    if (this.initType) {
+      this.invalid = false
+      this.init()
+    }
   }
 
   init() {
+    let color = this.initColor
     switch (this.initType) {
       case 'hex':
-        this.hex2rgb()
+        color = [color]
         break
       case 'rgb':
-        this.rgb2rgb()
+        color = transBracketColor(color)
         break
       case 'hsl':
-        this.hsl2rgb()
+        color = transBracketColor(color)
         break
-      default:
-        console.log('invalid color')
     }
+    const { r, g, b, a = 1 } = color2rgb[`${this.initType}2rgb`].apply(null, color)
+    this._r = r
+    this._g = g
+    this._b = b
+    this._a = a
   }
 
   getColor() {
+    let result = rgb2color[`rgb2${this.initColor}`](this._r, this._g, this._b, this._a)
     switch (this.initType) {
       case 'hex':
-        const { _r: r, _g: g, _b: b, _a: a } = this
-        return +a === 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${a})`
+        result = result
+        break
       case 'rgb':
-        return this.rgb2hsl()
+        result = result
+        break
       case 'hsl':
-        return this.rgb2hex()
-      default:
-        console.log('invalid color')
+        result = result
+        break
     }
+    return result
   }
 }
 

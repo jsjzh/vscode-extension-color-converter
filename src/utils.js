@@ -3,10 +3,12 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-28 14:35:50
+ * @LastEditTime: 2019-05-28 16:58:19
  * @Description: 工具函数集
  */
-
+const RGB_MAX = 255
+const HUE_MAX = 360
+const SV_MAX = 100
 /**
  * #22b1b180
  * #22b1b1
@@ -27,34 +29,11 @@ const hslReg = /^(hsl|hsla){1}\([\d,%. ]+\)$/
 const testColor = [{ type: 'hex', reg: HexReg }, { type: 'rgb', reg: rgbReg }, { type: 'hsl', reg: hslReg }]
 
 /**
- * 去除字符串中的空格
+ * 去除空格
  * @param {String} str
  */
 function removeSpace(str) {
-  return str.split(' ').join('')
-}
-
-/**
- * 用于 xxx(xxx,xxx,xxx) 的格式化
- * @param {String} str
- */
-function joinSpace(str) {
-  return str.split(',').join(', ')
-}
-
-/**
- * 获取 #xxx or #xxxxxx or #xxxxxxxx 的 16 进制转 10 进制的值
- * @param {String} str
- */
-function transHexColor(str) {
-  str = str.slice(1)
-  if (str.length === 3) str = str[0] + str[0] + str[1] + str[1] + str[2] + str[2]
-  if (str.length === 6) str = str + 'ff'
-  return str
-    .replace(/.{2}/g, g => `${g},`)
-    .split(',')
-    .filter(c => c)
-    .map((c, i) => (i === 3 ? convertHexToDecimal(c) : hex2dec(c)))
+  return str.replace(' ', '')
 }
 
 /**
@@ -65,15 +44,48 @@ function transBracketColor(str) {
   return str.replace(/([rgbahsl()])+?/g, '').split(',')
 }
 
-function hsl2Rgb(h, s, l) {
+/**
+ * 输入 hex 转换为 rgb，将所有的输入都统一成 #xxxxxxxx
+ * @param {String} str #xxx #xxxxxx #xxxxxxxx
+ */
+function hex2rgb(str) {
+  let reg = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i
+  str = str.charAt(0) === '#' ? str.slice(1) : str
+  if (str.length === 3) {
+    let _r = str.charAt(0)
+    let _g = str.charAt(1)
+    let _b = str.charAt(2)
+    str = _r + _r + _g + _g + _b + _b
+  }
+  if (str.length === 6) {
+    str = str + 'ff'
+  }
+  let result = reg.exec(str)
+
+  return {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16),
+    a: parseInt(result[4], 16) / 255
+  }
+}
+
+/**
+ * hsl 转 rgb，同样的，所有的输出都有 a（透明度），在输出的时候处理 a
+ * @param {Number} h [0,360]
+ * @param {Number} s [0,100]
+ * @param {Number} l [0,100]
+ * @param {Number} a [0,1]
+ */
+function hsl2rgb(h, s, l, a = 1) {
   let r, g, b
 
-  h = bound01(h, 360)
-  s = bound01(s, 100)
-  l = bound01(l, 100)
+  h = h === HUE_MAX ? 1 : (h % HUE_MAX) / parseFloat(HUE_MAX)
+  s = s === SV_MAX ? 1 : (s % SV_MAX) / parseFloat(SV_MAX)
+  l = l === SV_MAX ? 1 : (l % SV_MAX) / parseFloat(SV_MAX)
 
-  if (s == 0) {
-    r = g = b = l // achromatic
+  if (s === 0) {
+    r = g = b = l
   } else {
     function hue2rgb(p, q, t) {
       if (t < 0) t += 1
@@ -91,26 +103,50 @@ function hsl2Rgb(h, s, l) {
     b = hue2rgb(p, q, h - 1 / 3)
   }
 
-  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)]
+  return { r: r * RGB_MAX, g: g * RGB_MAX, b: b * RGB_MAX, a }
 }
 
-function isOnePointZero(n) {
-  return typeof n == 'string' && n.indexOf('.') != -1 && parseFloat(n) === 1
+/**
+ * rgb 转 hex，还是老样子，全部转为完整的格式，即使透明度是 1
+ * @param {Number} r [0,255]
+ * @param {Number} g [0,255]
+ * @param {Number} b [0,255]
+ * @param {Number} a [0,1]
+ */
+function rgb2hex(r, g, b, a = 1) {
+  r = Math.round(r).toString(16)
+  g = Math.round(g).toString(16)
+  b = Math.round(b).toString(16)
+  a = Math.round(a * 255).toString(16)
+
+  r = r.length === 1 ? '0' + r : r
+  g = g.length === 1 ? '0' + g : g
+  b = b.length === 1 ? '0' + b : b
+  a = a.length === 1 ? '0' + a : a
+
+  return '#' + r + g + b + a
 }
 
-function rgb2hsl(r, g, b) {
-  r = bound01(r, 255)
-  g = bound01(g, 255)
-  b = bound01(b, 255)
+/**
+ * rgb 转 hsl，全部转为完整的格式，即使透明度为 1
+ * @param {Number} r [0,255]
+ * @param {Number} g [0,255]
+ * @param {Number} b [0,255]
+ * @param {Number} a [0,1]
+ */
+function rgb2hsl(r, g, b, a = 1) {
+  r = r === RGB_MAX ? 1 : (r % RGB_MAX) / parseFloat(RGB_MAX)
+  g = g === RGB_MAX ? 1 : (g % RGB_MAX) / parseFloat(RGB_MAX)
+  b = b === RGB_MAX ? 1 : (b % RGB_MAX) / parseFloat(RGB_MAX)
 
-  let max = Math.max(r, g, b),
-    min = Math.min(r, g, b)
+  let max = Math.max(r, g, b)
+  let min = Math.min(r, g, b)
   let h,
     s,
     l = (max + min) / 2
 
-  if (max == min) {
-    h = s = 0 // achromatic
+  if (max === min) {
+    h = s = 0
   } else {
     let d = max - min
     s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
@@ -125,72 +161,21 @@ function rgb2hsl(r, g, b) {
         h = (r - g) / d + 4
         break
     }
-
     h /= 6
   }
 
-  return [Math.round(h * 360), Math.round(s * 100) + '%', Math.round(l * 100) + '%']
+  return { h: h * HUE_MAX, s: s * SV_MAX, l: l * SV_MAX, a }
 }
 
-function pad2(c) {
-  return c.length == 1 ? '0' + c : '' + c
-}
-
-function rgb2hex(r, g, b, a) {
-  let hex = [
-    pad2(Math.round(r).toString(16)),
-    pad2(Math.round(g).toString(16)),
-    pad2(Math.round(b).toString(16)),
-    pad2(convertDecimalToHex(a))
-  ]
-
-  return '#' + hex.join('')
-}
-
-function isPercentage(n) {
-  return typeof n === 'string' && n.indexOf('%') != -1
-}
-
-function bound01(n, max) {
-  if (isOnePointZero(n)) n = '100%'
-
-  let processPercent = isPercentage(n)
-  n = Math.min(max, Math.max(0, parseFloat(n)))
-
-  // Automatically convert percentage into number
-  if (processPercent) {
-    n = parseInt(n * max, 10) / 100
-  }
-
-  // Handle floating point rounding errors
-  if (Math.abs(n - max) < 0.000001) {
-    return 1
-  }
-
-  // Convert into [0, 1] range if it isn't already
-  return (n % max) / parseFloat(max)
-}
-
-function convertDecimalToHex(d) {
-  return Math.round(parseFloat(d) * 255).toString(16)
-}
-
-function convertHexToDecimal(h) {
-  return (hex2dec(h) / 255).toFixed(2)
-}
-
-function hex2dec(val) {
-  return parseInt(val, 16)
-}
+function rgb2rgb() {}
 
 module.exports = {
   testColor,
   removeSpace,
-  joinSpace,
-  bound01,
-  transHexColor,
   transBracketColor,
-  rgb2hsl,
+  hex2rgb,
+  rgb2rgb,
+  hsl2rgb,
   rgb2hex,
-  hsl2Rgb
+  rgb2hsl
 }
