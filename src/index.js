@@ -10,7 +10,6 @@ const { testColor } = require('./utils')
 function activate(context) {
   console.log('color converter is activate~')
   function colorConverter() {
-    debugger
     const { activeTextEditor } = vscode.window
     const { selections, document } = activeTextEditor
     // selections，去除空的以及非单行的 selections
