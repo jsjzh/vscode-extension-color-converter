@@ -1,6 +1,6 @@
 {
   "name": "color-converter",
-  "displayName": "color converter",
+  "displayName": "color-converter",
   "description": "转换 color 工具，支持 hex => rgb => hsl => hex",
   "keywords": [
     "color",
