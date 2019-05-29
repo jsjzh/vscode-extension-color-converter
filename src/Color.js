@@ -3,7 +3,7 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-28 17:10:07
+ * @LastEditTime: 2019-05-29 10:15:35
  * @Description: Color 类
  * hex -> rgb -> hsl -> hex
  */
@@ -17,11 +17,15 @@ const {
   rgb2rgb,
   hsl2rgb,
   rgb2hex,
-  rgb2hsl
+  rgb2hsl,
+  formatRgb,
+  formatHsl,
+  formatHex
 } = require('./utils')
 
+const vscode = require('vscode')
+
 const color2rgb = { hex2rgb, rgb2rgb, hsl2rgb }
-const rgb2color = { rgb2hex, rgb2rgb, rgb2hsl }
 
 class Color {
   constructor(color) {
@@ -58,23 +62,24 @@ class Color {
         break
     }
     const { r, g, b, a = 1 } = color2rgb[`${this.initType}2rgb`].apply(null, color)
-    this._r = r
-    this._g = g
-    this._b = b
-    this._a = a
+    this._r = +r
+    this._g = +g
+    this._b = +b
+    this._a = +a
   }
 
   getColor() {
-    let result = rgb2color[`rgb2${this.initColor}`](this._r, this._g, this._b, this._a)
+    let { _r: r, _g: g, _b: b, _a: a } = this
+    let result
     switch (this.initType) {
       case 'hex':
-        result = result
+        result = formatRgb(rgb2rgb(r, g, b, a))
         break
       case 'rgb':
-        result = result
+        result = formatHsl(rgb2hsl(r, g, b, a))
         break
       case 'hsl':
-        result = result
+        result = formatHex(rgb2hex(r, g, b, a))
         break
     }
     return result

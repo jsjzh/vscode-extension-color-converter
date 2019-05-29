@@ -3,7 +3,7 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-28 16:58:19
+ * @LastEditTime: 2019-05-29 10:21:40
  * @Description: 工具函数集
  */
 const RGB_MAX = 255
@@ -41,7 +41,10 @@ function removeSpace(str) {
  * @param {String} str
  */
 function transBracketColor(str) {
-  return str.replace(/([rgbahsl()])+?/g, '').split(',')
+  return str
+    .replace(/([rgbahsl()%])+?/g, '')
+    .split(',')
+    .map(num => +num)
 }
 
 /**
@@ -167,7 +170,46 @@ function rgb2hsl(r, g, b, a = 1) {
   return { h: h * HUE_MAX, s: s * SV_MAX, l: l * SV_MAX, a }
 }
 
-function rgb2rgb() {}
+function rgb2rgb(r, g, b, a = 1) {
+  return { r, g, b, a }
+}
+
+/**
+ * 格式化 rgb，若 a === 1，返回 rgb，否则都返回 rgba
+ * @param {Number} r [0,255]
+ * @param {Number} g [0,255]
+ * @param {Number} b [0,255]
+ * @param {Number} a [0,1]
+ */
+function formatRgb({ r, g, b, a = 1 }) {
+  a = +a
+  return a === 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${a})`
+}
+
+/**
+ * 格式化 hsl，若 a === 1，返回 hsl，否则都返回 hsla
+ * @param {Number} h [0,360]
+ * @param {Number} s [0,100]
+ * @param {Number} l [0,100]
+ * @param {Number} a [0,1]
+ */
+function formatHsl({ h, s, l, a = 1 }) {
+  a = +a
+  return a === 1 ? `hsl(${h}, ${s}%, ${l}%)` : `hsl(${h}, ${s}%, ${l}%, ${a})`
+}
+
+/**
+ * 输入完整的（八位）hex 色值，若透明度为 1，返回六位 hex，若还可精简则返回三位 hex
+ * @param {String} hex #xxxxxxxx
+ */
+function formatHex(hex) {
+  hex = hex.toLocaleLowerCase()
+  hex = hex.endsWith('ff') ? hex.slice(0, -2) : hex
+  if (hex.charAt(1) === hex.charAt(2) && hex.charAt(3) === hex.charAt(4) && hex.charAt(5) === hex.charAt(6)) {
+    hex = '#' + hex.charAt(1) + hex.charAt(3) + hex.charAt(5)
+  }
+  return hex
+}
 
 module.exports = {
   testColor,
@@ -177,5 +219,8 @@ module.exports = {
   rgb2rgb,
   hsl2rgb,
   rgb2hex,
-  rgb2hsl
+  rgb2hsl,
+  formatRgb,
+  formatHsl,
+  formatHex
 }
