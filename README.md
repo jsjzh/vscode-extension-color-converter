@@ -1,65 +1,53 @@
-# color-converter README
+# color-converter
 
-This is the README for your extension "color-converter". After writing up a brief description, we recommend including the following sections.
+## 介绍
 
-## Features
+该扩展可以帮助你直接转换色值，支持 `hex` => `rgb` => `hsl` => `hex` 转换，支持多个颜色选择转换。
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+## 使用方式
 
-For example if there is an image subfolder under your extension project workspace:
+选择一个或者按住 `Alt` 选择多个颜色，例如
 
-\!\[feature X\]\(images/feature-x.png\)
+- `hex`
+  - `#f44034b8`
+  - `##ff0fdb`
+  - `#f1d`
+- `rgb`
+  - `rgba(244, 64, 52, 0.72)`
+  - `rgb(244, 64, 52)`
+  - `rgb(255, 15, 219)`
+- `hsl`
+  - `hsla(4, 90%, 58%, 0.72)`
+  - `hsl(4, 90%, 58%)`
+  - `hsl(309, 100%, 53%)`
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+### 方式一（推荐）
 
-## Requirements
+直接使用 `Ctrl + Alt + R`（mac 上为 `cmd + Alt + R`） 即可切换颜色。
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+### 方式二
 
-## Extension Settings
+`Alt + Shift + P` 呼出控制台，输入 `cc` 即可转换颜色。
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+## 依赖
 
-For example:
+该扩展无需其他依赖。
 
-This extension contributes the following settings:
+## 扩展配置
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+该扩展暂无配置。
 
-## Known Issues
+## 已知问题
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+1. 选择了色值却无法转换，请注意你可能是选择中有空格，因为正则中对于一个有效的色值判断为 `/^[#rh](\d|\))$/`，所以如果前后有空格则不生效。
 
-## Release Notes
+## 后续更新
 
-Users appreciate release notes as you update your extension.
+1. 需要把转换后过长的位数给处理掉，比如你可能会得到 `rgba(244, 64, 52, 0.7215686274509804)` 这样的值。
+2. 是否需要增加一个扩展配置，配置转换后的 `rgb` 或者 `hsl` 中是否有空格。
 
-### 1.0.0
+## 版本
 
-Initial release of ...
+### 0.1.0
 
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+初版提交，初步功能完成。
