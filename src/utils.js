@@ -3,7 +3,7 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-29 12:01:21
+ * @LastEditTime: 2019-05-29 14:15:58
  * @Description: 工具函数集
  */
 const RGB_MAX = 255
@@ -231,7 +231,12 @@ function formatHsl({ h, s, l, a = 1 }) {
 function formatHex(hex) {
   hex = hex.toLocaleLowerCase()
   hex = hex.endsWith('ff') ? hex.slice(0, -2) : hex
-  if (hex.charAt(1) === hex.charAt(2) && hex.charAt(3) === hex.charAt(4) && hex.charAt(5) === hex.charAt(6)) {
+  if (
+    hex.charAt(1) === hex.charAt(2) &&
+    hex.charAt(3) === hex.charAt(4) &&
+    hex.charAt(5) === hex.charAt(6) &&
+    (!hex.charAt(7) && !hex.charAt(8))
+  ) {
     hex = '#' + hex.charAt(1) + hex.charAt(3) + hex.charAt(5)
   }
   return hex
