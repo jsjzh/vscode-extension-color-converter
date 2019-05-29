@@ -3,7 +3,7 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-29 10:21:40
+ * @LastEditTime: 2019-05-29 10:27:13
  * @Description: 工具函数集
  */
 const RGB_MAX = 255
@@ -37,7 +37,8 @@ function removeSpace(str) {
 }
 
 /**
- * 获取 xxx(a,b,c,d,e,...) 中 abcde... 的值
+ * 获取 xxx(a(%)?,b(%)?,c(%)?,d(%)?,e(%)?,...) 中 abcde... 的值
+ * 并且，在此会控制 abcde... 等等的值都为 number
  * @param {String} str
  */
 function transBracketColor(str) {
@@ -170,6 +171,13 @@ function rgb2hsl(r, g, b, a = 1) {
   return { h: h * HUE_MAX, s: s * SV_MAX, l: l * SV_MAX, a }
 }
 
+/**
+ * 输入即输出函数，不做转换
+ * @param {Number} r [0,255]
+ * @param {Number} g [0,255]
+ * @param {Number} b [0,255]
+ * @param {Number} a [0,1]
+ */
 function rgb2rgb(r, g, b, a = 1) {
   return { r, g, b, a }
 }

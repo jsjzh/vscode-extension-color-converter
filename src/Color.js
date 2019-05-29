@@ -3,7 +3,7 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-29 10:15:35
+ * @LastEditTime: 2019-05-29 10:26:29
  * @Description: Color 类
  * hex -> rgb -> hsl -> hex
  */
@@ -11,7 +11,6 @@
 const {
   testColor,
   removeSpace,
-  transHexColor,
   transBracketColor,
   hex2rgb,
   rgb2rgb,
@@ -62,6 +61,7 @@ class Color {
         break
     }
     const { r, g, b, a = 1 } = color2rgb[`${this.initType}2rgb`].apply(null, color)
+    // 在此处控制 rgba 四个值都为 number
     this._r = +r
     this._g = +g
     this._b = +b
