@@ -3,7 +3,7 @@
  * @Email: kimimi_king@163.com
  * @Date: 2019-05-27 15:48:38
  * @LastEditors: jsjzh
- * @LastEditTime: 2019-05-29 10:27:13
+ * @LastEditTime: 2019-05-29 12:01:21
  * @Description: 工具函数集
  */
 const RGB_MAX = 255
@@ -183,6 +183,16 @@ function rgb2rgb(r, g, b, a = 1) {
 }
 
 /**
+ * 数字保留小数专用
+ * @param {Number} num 2.2222
+ * @param {Number} point 1
+ */
+function roundPoint(num, point = 1) {
+  let multiple = Math.pow(10, point)
+  return Math.round(num * multiple) / multiple
+}
+
+/**
  * 格式化 rgb，若 a === 1，返回 rgb，否则都返回 rgba
  * @param {Number} r [0,255]
  * @param {Number} g [0,255]
@@ -191,6 +201,10 @@ function rgb2rgb(r, g, b, a = 1) {
  */
 function formatRgb({ r, g, b, a = 1 }) {
   a = +a
+  r = roundPoint(r)
+  g = roundPoint(g)
+  b = roundPoint(b)
+  a = roundPoint(a)
   return a === 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${a})`
 }
 
@@ -203,6 +217,10 @@ function formatRgb({ r, g, b, a = 1 }) {
  */
 function formatHsl({ h, s, l, a = 1 }) {
   a = +a
+  h = roundPoint(h)
+  s = roundPoint(s)
+  l = roundPoint(l)
+  a = roundPoint(a)
   return a === 1 ? `hsl(${h}, ${s}%, ${l}%)` : `hsl(${h}, ${s}%, ${l}%, ${a})`
 }
 
